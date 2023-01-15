@@ -1,17 +1,6 @@
 FROM php:7.0-fpm  
 RUN docker-php-ext-install pdo_mysql 
 
-# Installation dans votre Image du minimum pour que Docker fonctionne
-RUN apk add oniguruma-dev libxml2-dev
-RUN docker-php-ext-install \
-    bcmath \
-    ctype \
-    fileinfo \
-    mbstring \
-    pdo_mysql \
-    tokenizer \
-    xml
-
 # Installation dans votre image de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
