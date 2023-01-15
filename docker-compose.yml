@@ -1,0 +1,72 @@
+services:
+      nginx:    
+            build: ./nginx/  
+            container_name: nginx-container  
+            ports:  
+            - 8000:80
+            links:  
+            - php  
+            volumes_from:  
+            - app-data  
+
+      php:    
+            build: ./php/  
+            container_name: php-container  
+            expose:  
+            - 9000  
+            links:  
+            - mysql  
+            volumes_from:  
+            - app-data  
+
+      app-data:    
+            image: php:7.0-fpm  
+            container_name: app-data-container  
+            volumes:  
+            - ./www/html/:/var/www/html/  
+            command: "true"  
+
+      nginx-2:    
+            build: ./nginx-2/  
+            container_name: nginx-container-2
+            ports:  
+            - 8080:80
+            links:  
+            - php-2  
+            volumes_from:  
+            - app-data-2
+
+      php-2:    
+            build: ./php-2/  
+            container_name: php-container-2  
+            expose:  
+            - 9005 
+            links:  
+            - mysql  
+            volumes_from:  
+            - app-data-2  
+
+      app-data-2:    
+            image: php:7.0-fpm  
+            container_name: app-data-container-2
+            volumes:  
+            - ./www/html2/:/var/www/html2/  
+            command: "true"  
+
+      mysql:    
+            image: mysql:5.7  
+            container_name: mysql-container  
+            volumes_from:  
+             - mysql-data  
+            environment:  
+                  MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+                  MYSQL_DATABASE: ${DB_DATABASE}
+                  MYSQL_USER: ${DB_USER}
+                  MYSQL_PASSWORD: ${DB_PASSWORD}
+
+      mysql-data:    
+            image: mysql:5.7  
+            container_name: mysql-data-container  
+            volumes:  
+            - /var/lib/mysql  
+            command: "true" 
